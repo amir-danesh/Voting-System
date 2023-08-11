@@ -49,6 +49,10 @@ class PlanRepository {
         this.plans.push(newPlan);
         return newPlan;
     }
+
+    getPlanById(id: number): Plan | undefined {
+        return this.plans.find((plan) => plan.id === id);
+    }
 }
 
 export default PlanRepository;

@@ -1,11 +1,9 @@
 import PlanRepository from "../../repositories/plan";
-import UserRepository from "../../repositories/user";
-import { AuthenticationError, DateValidationError, NotFoundError } from "../utility/app-error";
+import { BadRequestError, DateValidationError, NotFoundError } from "../utility/app-error";
 import { HttpResponseType } from "../../controllers/utility/http-response";
-import { isUserLoggedInAndAdmin } from "../user";
+import { findUserByIDandRole } from "../user";
 
 const planRepository = PlanRepository.getInstance();
-const userRepository = UserRepository.getInstance();
 
 export const validatedDate = (date: Date) => {
     const currentDate = new Date();
@@ -16,9 +14,24 @@ export const validatedDate = (date: Date) => {
 };
 
 export const addPlan = (userId: string, title: string, deadLine: Date, description?: string): HttpResponseType => {
-    isUserLoggedInAndAdmin(userId);
+    findUserByIDandRole(userId, "Admin");
     validatedDate(deadLine);
 
     const createPlan = planRepository.addPlan({ title, description, deadLine });
     return { status: 200, response: { message: "Plan added successfully", data: createPlan } };
 };
+
+export const planExists = (planId: number) => {
+    const plan = planRepository.getPlanById(planId);
+    if (!plan) {
+        throw new NotFoundError("Plan not found");
+    }
+    return plan;
+}
+
+export const deadLineNotPassed = (deadLine: Date) => {
+    if (deadLine.getTime() < new Date().getTime()) {
+        throw new BadRequestError("Plan deadline is reached");
+    }
+    return true
+}

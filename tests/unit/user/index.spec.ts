@@ -1,4 +1,4 @@
-import { userLogin, isUserLoggedInAndAdmin } from "../../../src/services/user";
+import { userLogin } from "../../../src/services/user";
 
 describe("User", () => {
     it("should return 200 if user exists", () => {
@@ -9,7 +9,7 @@ describe("User", () => {
     it("should return 401 if user does not exist", () => {
         expect(userLogin("incorrect username", "admin")).toEqual({
             status: "fail",
-            message: "username of password is incorrect",
+            message: "username or password is incorrect",
         });
     });
 });

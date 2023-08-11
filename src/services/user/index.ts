@@ -1,4 +1,5 @@
 import UserRepository from "../../repositories/user";
+import { UserRole } from "../../models/user";
 import { AuthenticationError } from "../utility/app-error";
 
 const userRepository = UserRepository.getInstance();
@@ -20,16 +21,19 @@ export const userLogin = (username: string, password: string) => {
           }
         : {
               status: "fail",
-              message: "username of password is incorrect",
+              message: "username or password is incorrect",
           };
 
     return response;
 };
 
-export const isUserLoggedInAndAdmin = (userId: string) => {
+export const findUserByIDandRole = (userId: string, role: UserRole) => {
     const foundUser = userRepository.getUserById(userId);
     if(!foundUser){
         throw new AuthenticationError("User is not Authenticated");
+    }
+    if(foundUser.role!== role){
+        throw new AuthenticationError(`User is not ${role}`);
     }
     return foundUser
 }

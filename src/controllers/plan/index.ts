@@ -1,11 +1,10 @@
 import express from "express";
-import { isNonEmptyString } from "../../services/utility/non-empty-string";
 import { addPlan } from "../../services/plan";
 import { HttpResponseType, sendResponse } from "../utility/http-response";
 import { DateValidationError, NotFoundError } from "../../services/utility/app-error";
 import { z } from "zod";
 
-const moment = require("moment");
+export const router = express.Router();
 
 const DateValidation = (date: string) => {
     if (!isNaN(Date.parse(date)) && Date.parse(date) > Date.now()) {
@@ -23,8 +22,6 @@ const planParser = z.object({
 });
 
 const userIdParser = z.string().nonempty().uuid()
-
-export const router = express.Router();
 
 router.post("/", async (req, res) => {
     try {
