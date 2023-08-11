@@ -1,8 +1,11 @@
 import PlanRepository from "../../repositories/plan";
-import { DateValidationError } from "../utility/app-error";
+import UserRepository from "../../repositories/user";
+import { AuthenticationError, DateValidationError, NotFoundError } from "../utility/app-error";
 import { HttpResponseType } from "../../controllers/utility/http-response";
+import { isUserLoggedInAndAdmin } from "../user";
 
 const planRepository = PlanRepository.getInstance();
+const userRepository = UserRepository.getInstance();
 
 export const validatedDate = (date: Date) => {
     const currentDate = new Date();
@@ -12,7 +15,8 @@ export const validatedDate = (date: Date) => {
     return true;
 };
 
-export const addPlan = (title: string, deadLine: Date, description?: string): HttpResponseType => {
+export const addPlan = (userId: string, title: string, deadLine: Date, description?: string): HttpResponseType => {
+    isUserLoggedInAndAdmin(userId);
     validatedDate(deadLine);
 
     const createPlan = planRepository.addPlan({ title, description, deadLine });

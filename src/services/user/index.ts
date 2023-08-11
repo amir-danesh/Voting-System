@@ -1,8 +1,7 @@
 import UserRepository from "../../repositories/user";
-import { HttpResponseType } from "../../controllers/utility/http-response";
 import { AuthenticationError } from "../utility/app-error";
 
-const userReposity = UserRepository.getInstance();
+const userRepository = UserRepository.getInstance();
 
 type LoginResponse = {
     status: "ok" | "fail";
@@ -11,7 +10,7 @@ type LoginResponse = {
 };
 
 export const userLogin = (username: string, password: string) => {
-    const user = userReposity.getUserByUsernameAndPassword(username, password);
+    const user = userRepository.getUserByUsernameAndPassword(username, password);
 
     const response: LoginResponse = user
         ? {
@@ -26,3 +25,11 @@ export const userLogin = (username: string, password: string) => {
 
     return response;
 };
+
+export const isUserLoggedInAndAdmin = (userId: string) => {
+    const foundUser = userRepository.getUserById(userId);
+    if(!foundUser){
+        throw new AuthenticationError("User is not Authenticated");
+    }
+    return foundUser
+}

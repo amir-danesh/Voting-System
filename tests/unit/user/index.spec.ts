@@ -1,4 +1,4 @@
-import { userLogin } from "../../../src/services/user";
+import { userLogin, isUserLoggedInAndAdmin } from "../../../src/services/user";
 
 describe("User", () => {
     it("should return 200 if user exists", () => {
@@ -13,3 +13,4 @@ describe("User", () => {
         });
     });
 });
+

@@ -35,6 +35,10 @@ class UserRepository {
     getUserByUsernameAndPassword(username: string, password: string): User | undefined {
         return this.users.find((user) => user.username === username && user.password === password);
     }
+
+    getUserById(id: string): User | undefined {
+        return this.users.find((user) => user.id === id);
+    }
 }
 
 export default UserRepository;
