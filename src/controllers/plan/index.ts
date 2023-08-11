@@ -2,47 +2,45 @@ import express from "express";
 import { isNonEmptyString } from "../../services/utility/non-empty-string";
 import { addPlan } from "../../services/plan";
 import { HttpResponseType, sendResponse } from "../utility/http-response";
+import { DateValidationError } from "../../services/utility/app-error";
+import { z } from "zod";
 
 const moment = require("moment");
+
+const DateValidation = (date: string) => {
+    if( !isNaN(Date.parse(date)) && Date.parse(date) > Date.now() ) {
+        return true;
+    }
+    return false;
+}
+
+const planParser = z.object({
+    title: z.string().nonempty().min(1),
+    description: z.string().optional(),
+    deadLine: z.string().refine(DateValidation , {
+        message: "deadline is invalid or cannot be in the past",
+    }),
+});
 
 export const router = express.Router();
 
 router.post("/", async (req, res) => {
-    const { title, description, deadLine } = req.body;
+    try {
+        const planParams = planParser.parse(req.body);
+        const response: HttpResponseType = addPlan(planParams.title, new Date(planParams.deadLine), planParams.description,);
 
-    if (!isNonEmptyString(title, "title").state) {
-        sendResponse(res, {
-            status: 400,
-            response: {
-                message: "title is required",
-            },
-        });
-        return;
-    }
-
-    if (description && typeof description !== "string") {
-        sendResponse(res, {
-            status: 400,
-            response: {
-                message: "discription must be a string or an empty string or not provided",
-            },
-        });
+        sendResponse(res, response);
+        return
+    } catch (error) {
+        if (error instanceof z.ZodError) {
+            sendResponse(res, { status: 400, response: { message: error.message } });
+            return
+        }
+        if (error instanceof DateValidationError) {
+            sendResponse(res, { status: 400, response: { message: error.message } }) ;
+            return
+        }
+        sendResponse(res, { status: 500, response: { message: "An internal server error occurred" } });
         return
     }
-
-    if (!moment(deadLine).isValid()) {
-        sendResponse(res, {
-            status: 400,
-            response: {
-                message: "deadLine is not valid date",
-            },
-        });
-        return
-    }
-
-    const response: HttpResponseType = addPlan(title, description, new Date(deadLine));
-
-    console.log(response);
-
-    sendResponse(res, response);
 });

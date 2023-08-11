@@ -4,24 +4,25 @@ import { AuthenticationError } from "../utility/app-error";
 
 const userReposity = UserRepository.getInstance();
 
+type LoginResponse = {
+    status: "ok" | "fail";
+    message: string;
+    data?: any;
+};
+
 export const userLogin = (username: string, password: string) => {
-    try {
-        const user = userReposity.getUserByUsernameAndPassword(username, password);
-        if (!user) {
-            throw new AuthenticationError("Invalid username or password");
-        }
-        const response: HttpResponseType = {
-            status: 200,
-            response: {
-                message: "Login successful",
-                data: user
-            }
-        }
-        return response
-    } catch (error) {
-        if (error instanceof AuthenticationError) {            
-            return { status: error.statusCode, response: { message: error.message } };
-        }
-        return { status: 500, response: { message: "Internal server error" }}
-    }
+    const user = userReposity.getUserByUsernameAndPassword(username, password);
+
+    const response: LoginResponse = user
+        ? {
+              status: "ok",
+              message: "login successful",
+              data: user,
+          }
+        : {
+              status: "fail",
+              message: "username of password is incorrect",
+          };
+
+    return response;
 };

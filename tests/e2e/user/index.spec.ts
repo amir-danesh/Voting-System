@@ -25,14 +25,14 @@ describe("User", () => {
         });
 
         it("should return 401 if username or password are not provided", async () => {
-            await request(app).post("/login").send({ username: "admin" }).expect(401);
+            await request(app).post("/login").send({ username: "admin" }).expect(400);
         });
 
         it("should return 401 if username or password are provided out of string context", async () => {
             await request(app)
                 .post("/login")
                 .send({ username: null, password: 123456 })
-                .expect(401);
+                .expect(400);
         });
     });
 });

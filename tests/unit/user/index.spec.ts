@@ -1,13 +1,15 @@
-import { userLogin } from "../../../src/services/user"
+import { userLogin } from "../../../src/services/user";
 
-describe ("User", () => {
+describe("User", () => {
     it("should return 200 if user exists", () => {
-        const result = userLogin("admin", "admin")
-        expect(result.status).toBe(200);
-    })
+        const result = userLogin("admin", "admin");
+        expect(result.status).toBe("ok");
+    });
 
     it("should return 401 if user does not exist", () => {
-        const result = userLogin("incorrect username", "admin");
-        expect(result.status).toBe(401);
-    })
-})
+        expect(userLogin("incorrect username", "admin")).toEqual({
+            status: "fail",
+            message: "username of password is incorrect",
+        });
+    });
+});

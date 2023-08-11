@@ -5,4 +5,5 @@ export interface User {
     role: UserRole;
 }
 
-export type UserRole = "Admin" | "Representative" | "Normal";
+const roles = ["Admin","Representative","Normal"] as const;
+export type UserRole = typeof roles[number];

@@ -12,16 +12,9 @@ export const validatedDate = (date: Date) => {
     return true;
 };
 
-export const addPlan = (title: string, description: string, deadLine: Date): HttpResponseType => {
-    try {
-        validatedDate(deadLine);
+export const addPlan = (title: string, deadLine: Date, description?: string): HttpResponseType => {
+    validatedDate(deadLine);
 
-        const createPlan = planRepository.addPlan({ title, description, deadLine });
-        return { status: 200, response: { message: "Plan added successfully", data: createPlan } };
-    } catch (error) {
-        if (error instanceof DateValidationError) {
-            return { status: 400, response: { message: error.message } };
-        }
-        return { status: 500, response: { message: "An internal server error occurred" } };
-    }
+    const createPlan = planRepository.addPlan({ title, description, deadLine });
+    return { status: 200, response: { message: "Plan added successfully", data: createPlan } };
 };
