@@ -1,6 +1,7 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import { isNonEmptyString } from "../../services/utility/non-empty-string";
 import { sendResponse } from "../utility/http-response";
+import { HttpResponseType } from "../utility/http-response";
 import { userLogin } from "../../services/user";
 
 export const router = express.Router();
@@ -15,8 +16,8 @@ router.post('/login', (req,res) => {
         return;
     }
 
-    const response = userLogin(username, password);
-
+    const response: HttpResponseType = userLogin(username, password);
+    
     sendResponse(res, response);
     return;
 });

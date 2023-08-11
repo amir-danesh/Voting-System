@@ -1,6 +1,6 @@
 import { Response } from "express";
 
-export type HttpResponse = {
+export type HttpResponseType = {
     status: number;
     response: {
         message: string;
@@ -8,6 +8,6 @@ export type HttpResponse = {
     };
 }
 
-export const sendResponse = (res: Response, value: HttpResponse) => {
+export const sendResponse = (res: Response, value: HttpResponseType) => {
     res.status(value.status).send(value.response);
 };

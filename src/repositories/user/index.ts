@@ -2,6 +2,8 @@ import { v4 } from "uuid";
 import { User } from "../../models/user";
 
 class UserRepository {
+    private constructor() {}
+    private static userRepoInstance: UserRepository | undefined = undefined;
     private users: User[] = [
         {
             id: v4(),
@@ -23,8 +25,15 @@ class UserRepository {
         },
     ];
 
+    public static getInstance(): UserRepository {
+        if (!this.userRepoInstance) {
+            this.userRepoInstance = new UserRepository();
+        }
+        return this.userRepoInstance;
+    }
+
     getUserByUsernameAndPassword(username: string, password: string): User | undefined {
-        return this.users.find(user => user.username === username && user.password === password);
+        return this.users.find((user) => user.username === username && user.password === password);
     }
 }
 

@@ -7,7 +7,8 @@
     "start": "ts-node ./src/server.ts",
     "test:e2e": "jest --testMatch **/tests/e2e/**/*.spec.ts",
     "test:unit": "jest --testMatch **/tests/unit/**/*.spec.ts",
-    "test-all": "jest --testMatch **/tests/**/*.spec.ts"
+    "test:all": "jest --testMatch **/tests/**/*.spec.ts --coverage",
+    "test:afc": "jest --testMatch **/tests/**/*.spec.ts --coverage --collectCoverageFrom='src/**/*.ts'"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +27,7 @@
   },
   "dependencies": {
     "express": "^4.18.2",
+    "moment": "^2.29.4",
     "uuid": "^9.0.0"
   }
 }
