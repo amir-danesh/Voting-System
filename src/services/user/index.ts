@@ -1,5 +1,5 @@
 import UserRepository from "../../repositories/user";
-import { UserRole } from "../../models/user";
+import { UserRole, User } from "../../models/user";
 import { AuthenticationError } from "../utility/app-error";
 
 
@@ -8,6 +8,15 @@ type LoginResponse = {
     message: string;
     data?: any;
 };
+
+declare global {
+    namespace Express {
+        interface Request {
+            user: any;
+        }
+    }
+}
+
 
 export class UserService {
     private userRepo: UserRepository;
@@ -42,5 +51,13 @@ export class UserService {
             throw new AuthenticationError(`User is not ${role}`);
         }
         return foundUser
+    }
+
+    async findUserById (userId: string): Promise<User> {
+        const foundUser = await this.userRepo.getUserById(userId);
+        if(!foundUser){
+            throw new AuthenticationError("User is not Authenticated");
+        }
+        return foundUser;
     }
 }

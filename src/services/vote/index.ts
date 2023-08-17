@@ -1,16 +1,18 @@
-import { findUserByIDandRole } from "../user";
 import ProgramRepository from "../../repositories/program";
 import PlanRepository from "../../repositories/plan";
 import VoteRepository from "../../repositories/vote";
 import { BadRequestError } from "../utility/app-error";
 import { deadLineNotPassed } from "../plan";
+import { UserService } from "../user";
 
 const planRepository = PlanRepository.getInstance();
 const programRepository = ProgramRepository.getInstance();
 const voteRepository = VoteRepository.getInstance();
 
+const userService = new UserService();
+
 export const voteProgram = (userId: string, programId: number) => {
-    findUserByIDandRole(userId, "Normal");
+    userService.findUserByIDandRole(userId, "Normal");
 
     const selectedProgram = programRepository.getProgramById(programId)
     if (!selectedProgram){

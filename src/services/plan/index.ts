@@ -1,9 +1,10 @@
 import PlanRepository from "../../repositories/plan";
 import { BadRequestError, DateValidationError, NotFoundError } from "../utility/app-error";
 import { HttpResponseType } from "../../controllers/utility/http-response";
-import { findUserByIDandRole } from "../user";
+import { UserService } from "../user";
 
 const planRepository = PlanRepository.getInstance();
+const userService = new UserService();
 
 export const validatedDate = (date: Date) => {
     const currentDate = new Date();
@@ -14,7 +15,7 @@ export const validatedDate = (date: Date) => {
 };
 
 export const addPlan = (userId: string, title: string, deadLine: Date, description?: string): HttpResponseType => {
-    findUserByIDandRole(userId, "Admin");
+    userService.findUserByIDandRole(userId, "Admin");
     validatedDate(deadLine);
 
     const createPlan = planRepository.addPlan({ title, description, deadLine });

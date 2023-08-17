@@ -13,7 +13,7 @@ export const  AppDataSource = new DataSource({
     port: 3306,
     username: "root",
     password: "its lock", 
-    database: "hame_porsi", 
+    database: "hameporsi", 
     // username: process.env.DB_USER,
     // password: process.env.DB_PASSWORD, 
     // database: process.env.DB_NAME, 

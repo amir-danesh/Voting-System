@@ -1,9 +1,10 @@
 import ProgramRepository from "../../repositories/program";
 import { planExists, deadLineNotPassed } from "../plan";
-import { findUserByIDandRole } from "../user";
+import { UserService } from "../user";
 import { BadRequestError } from "../utility/app-error";
 
 const programRepository = ProgramRepository.getInstance();
+const userService = new UserService()
 
 type programCreationResponse = {
     status: "ok" | "fail";
@@ -12,7 +13,7 @@ type programCreationResponse = {
 }
 
 export const createProgram = (userId: string, planId: number, title: string, description?: string ) => {
-    findUserByIDandRole(userId, "Representative");
+    userService.findUserByIDandRole(userId, "Representative");
 
     const plan = planExists(planId);
     deadLineNotPassed(plan.deadLine);
@@ -33,7 +34,7 @@ export const createProgram = (userId: string, planId: number, title: string, des
 }
 
 export const editProgram = (userId: string, planId: number, programId: number, title: string, description?: string ) => {
-    findUserByIDandRole(userId, "Representative");
+    userService.findUserByIDandRole(userId, "Representative");
 
     const plan = planExists(planId);
     deadLineNotPassed(plan.deadLine);
