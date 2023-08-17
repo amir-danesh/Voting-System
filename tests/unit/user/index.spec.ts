@@ -1,4 +1,4 @@
-import { userLogin } from "../../../src/services/user";
+import { userLogin, findUserByIDandRole } from "../../../src/services/user";
 
 describe("User", () => {
     it("should return 200 if user exists", () => {
@@ -12,5 +12,9 @@ describe("User", () => {
             message: "username or password is incorrect",
         });
     });
+
+    it("should return user if user does exists", () => {
+        expect(findUserByIDandRole("",""))
+    })
 });
 

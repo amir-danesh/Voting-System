@@ -1,43 +1,21 @@
 import { v4 } from "uuid";
 import { User } from "../../models/user";
+import { Repository } from "typeorm";
+import { UserEntity } from "../../entities/user.entity";
+import { AppDataSource } from "../../../data-source";
 
 class UserRepository {
-    private constructor() {}
-    private static userRepoInstance: UserRepository | undefined = undefined;
-    private users: User[] = [
-        {
-            id: v4(),
-            username: "admin",
-            password: "admin",
-            role: "Admin",
-        },
-        {
-            id: v4(),
-            username: "rep",
-            password: "rep",
-            role: "Representative",
-        },
-        {
-            id: v4(),
-            username: "norm",
-            password: "norm",
-            role: "Normal",
-        },
-    ];
-
-    public static getInstance(): UserRepository {
-        if (!this.userRepoInstance) {
-            this.userRepoInstance = new UserRepository();
-        }
-        return this.userRepoInstance;
+    private userRepo: Repository<UserEntity>;
+    constructor() {
+        this.userRepo = AppDataSource.getRepository(UserEntity);
     }
 
-    getUserByUsernameAndPassword(username: string, password: string): User | undefined {
-        return this.users.find((user) => user.username === username && user.password === password);
+    getUserByUsernameAndPassword(username: string, password: string): Promise<User | null> {
+        return this.userRepo.findOneBy({ username, password });
     }
 
-    getUserById(id: string): User | undefined {
-        return this.users.find((user) => user.id === id);
+    getUserById(id: string): Promise<User | null> {
+        return this.userRepo.findOneBy({ id });
     }
 }
 

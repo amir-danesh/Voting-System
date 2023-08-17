@@ -11,7 +11,7 @@ describe("non-empty string", () => {
         expect(result.message).toBe("field is required");
     });
 
-    it("should return false if value is not a strimg", () => {
+    it("should return false if value is not a string", () => {
         const result = isNonEmptyString(234);
         expect(result.message).toBe("field should be a string");
     });

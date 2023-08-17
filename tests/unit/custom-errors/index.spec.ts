@@ -5,6 +5,7 @@ import {
     NotFoundError,
     DateValidationError,
     ServerInternalError,
+    BadRequestError,
 } from "../../../src/services/utility/app-error"; // Import your error classes
 
 describe('Custom Error Classes', () => {
@@ -55,6 +56,14 @@ describe('Custom Error Classes', () => {
         expect(serverError.isOperational).toBe(true);
         expect(serverError.message).toBe('An internal server error occurred');
     });
+
+    test("BadRequestError should have correct properties", () => {
+        const serverError = new BadRequestError("A bad request error occurred");
+        expect(serverError.statusCode).toBe(400);
+        expect(serverError.status).toBe('fail');
+        expect(serverError.isOperational).toBe(true);
+        expect(serverError.message).toBe('A bad request error occurred');
+    })
 
     test('AppError should be instance of Error', () => {
         const appError = new AppError('Generic error', 400);

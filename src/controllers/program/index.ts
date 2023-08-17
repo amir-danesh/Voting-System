@@ -19,7 +19,7 @@ const editProgramParser = z.object({
     description: z.string().optional(),
 })
 
-const userIdParser = z.string().nonempty().uuid()
+const userIdParser = z.string().nonempty().uuid();
 
 router.post("/", async (req, res) => {
     try {
@@ -58,8 +58,8 @@ router.post("/edit", async (req, res) => {
     try {
         const userId = userIdParser.parse(req.headers["Authorization"]);
 
-        const { planId, programId, title, description } = await editProgramParser.parseAsync(req.body);
-        const r = await editProgram(userId, planId, programId, title, description);
+        const { planId, programId, title, description } = editProgramParser.parse(req.body);
+        const r = editProgram(userId, planId, programId, title, description);
 
         const response: HttpResponseType = 
         {

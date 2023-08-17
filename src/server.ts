@@ -1,5 +1,11 @@
 import { app, PORT } from ".";
+import { AppDataSource } from "../data-source";
+import { seedUser } from "./entities/seed";
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+AppDataSource.initialize()
+    .then(() => seedUser())
+    .then(() => {
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+})
